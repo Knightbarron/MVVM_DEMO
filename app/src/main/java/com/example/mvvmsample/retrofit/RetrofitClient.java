@@ -13,13 +13,22 @@ public class RetrofitClient {
     static Retrofit.Builder builder;
     private static Retrofit retrofit=null;
 
+
+    //Double check synchronised block to create an instance
     public static Retrofit getRetrofit(){
 
         if (retrofit==null) {
+            synchronized (RetrofitClient.class){
+                if (retrofit==null){
+                    //Initializing the retrofit
+                    builder = new Retrofit.Builder().baseUrl(ApiService.BASE_URL).addConverterFactory(GsonConverterFactory.create());
 
-            builder = new Retrofit.Builder().baseUrl(ApiService.BASE_URL).addConverterFactory(GsonConverterFactory.create());
+                    retrofit = builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
 
-            retrofit = builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
+                }
+
+            }
+
 
         }
         return retrofit;

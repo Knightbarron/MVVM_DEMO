@@ -1,46 +1,44 @@
 package com.example.mvvmsample.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.mvvmsample.data.api.AppApiHelper;
 import com.example.mvvmsample.data.models.UserResponse;
 import com.example.mvvmsample.data.prefs.AppPreferencesHelper;
-import com.example.mvvmsample.retrofit.RetrofitClient;
 
 import io.reactivex.Observable;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class AppDataManager implements DataManager{
+public class AppDataManager implements DataManagerHelper {
 
-   private  AppApiHelper apiHelper;
-   private  AppPreferencesHelper preferencesHelper;
+    private AppApiHelper apiHelper;
+    private AppPreferencesHelper preferencesHelper;
 
-   private Context context;
+    private Context context;
     private static final String TAG = "AppDataManager";
 
-   private static AppDataManager instance;
+    private static AppDataManager instance;
 
     public AppDataManager(Context context) {
         this.context = context;
 
         apiHelper = AppApiHelper.getInstance(context);
-
-
-        if (apiHelper==null)
-            Log.d(TAG, "AppDataManager: ApiHelperis null");
-        else Log.d(TAG, "AppDataManager: NOT NULL APIHELPER");
-         //TODO add sharedPREFERENCE
+        preferencesHelper = AppPreferencesHelper.getInstance(context);
 
     }
 
-    public static AppDataManager getInstance(Context context){
+    //DOuble check synchronised block to create an instance
+    public static  AppDataManager  getInstance(Context context) {
 
-        if (instance==null)
-            instance = new AppDataManager(context);
+        if (instance == null){
+            synchronized(AppDataManager.class){
+                    if(instance == null){
+                        instance = new AppDataManager(context);
+                    }
+            }
+        }
+
         return instance;
-
     }
 
     @Override

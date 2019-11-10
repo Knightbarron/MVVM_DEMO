@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.Retrofit.Builder;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+//Api Provider to Data Manager class
 public class AppApiHelper implements ApiHelper{
 
     private static AppApiHelper appApiHelper;
@@ -23,7 +24,8 @@ public class AppApiHelper implements ApiHelper{
 
 
     private static final String TAG = "AppApiHelper";
-    
+
+    //retrofit is instantiated here
     public AppApiHelper(Context context) {
         this.context = context;
         retrofitClient = RetrofitClient.getRetrofit();
@@ -37,9 +39,17 @@ public class AppApiHelper implements ApiHelper{
         return apiService.getUserList();
     }
 
+
+    //DOuble check synchronised block to create an instance
     public static AppApiHelper getInstance(Context context) {
-        if (appApiHelper==null)
-            appApiHelper = new AppApiHelper(context);
+        if (appApiHelper==null){
+
+            synchronized (AppApiHelper.class){
+                if (appApiHelper==null)
+                    appApiHelper = new AppApiHelper(context);
+            }
+
+        }
         return appApiHelper;
     }
 
