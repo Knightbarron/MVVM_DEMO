@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mvvmsample.data.AppDataManager;
@@ -19,7 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = "MainViewModel";
 
@@ -27,12 +29,12 @@ public class MainViewModel extends ViewModel {
     private Context context;
 
 
-    Retrofit retrofit;
 
-    public MainViewModel() {
-        retrofit = RetrofitClient.getRetrofit();
+    public MainViewModel(@NonNull Application application) {
+        super(application);
+        this.context = application.getApplicationContext();
         this.appDataManager = AppDataManager.getInstance(context);
-        this.context = context;
+        Log.d(TAG, "MainViewModel: " +(this.appDataManager == null));
 
     }
 

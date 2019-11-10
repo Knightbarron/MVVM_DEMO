@@ -9,32 +9,33 @@ import com.example.mvvmsample.retrofit.RetrofitClient;
 import io.reactivex.Observable;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.Retrofit.Builder;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public class AppApiHelper implements ApiService{
+public class AppApiHelper implements ApiHelper{
 
     private static AppApiHelper appApiHelper;
-    private ApiService apiService;
 
+    private ApiService apiService;
     private Context context;
 
-    Retrofit retrofitClient;
+    private Retrofit retrofitClient;
 
 
     private static final String TAG = "AppApiHelper";
     
     public AppApiHelper(Context context) {
         this.context = context;
-     //   appApiHelper = AppApiHelper.getInstance(context);
-//        if (retrofitClient==null)
-//            Log.d(TAG, "AppApiHelper: Retrofit null");
-//        else Log.d(TAG, "AppApiHelper: NOT NULL");
+        retrofitClient = RetrofitClient.getRetrofit();
+
+        apiService = retrofitClient.create(ApiService.class);
     }
+
 
     @Override
     public Observable<Response<UserResponse>> getUserList() {
         return apiService.getUserList();
     }
-
 
     public static AppApiHelper getInstance(Context context) {
         if (appApiHelper==null)
